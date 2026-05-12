@@ -1,0 +1,102 @@
+﻿.admin-monitor-hero {
+        margin-bottom: 22px;
+        padding: 28px;
+        border-radius: 18px;
+        background:
+            radial-gradient(circle at 78% 10%, rgba(53,184,159,.24), transparent 28%),
+            linear-gradient(135deg, rgba(255,255,255,.9), rgba(255,255,255,.62));
+        border: 1px solid rgba(15,61,56,.1);
+        box-shadow: var(--shadow);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+    }
+    .admin-monitor-hero::after {
+        content: '';
+        position: absolute;
+        right: -120px;
+        top: 28px;
+        width: 420px;
+        height: 180px;
+        border-top: 1.5px solid rgba(22,121,111,.2);
+        border-radius: 50%;
+    }
+    .admin-monitor-hero > * { position: relative; z-index: 1; }
+    .admin-monitor-hero h1 { font-size: 26px; letter-spacing: 0; }
+    .admin-monitor-hero p { margin-top: 7px; color: var(--gray-600); max-width: 680px; line-height: 1.65; }
+    .monitor-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(15,61,56,.11);
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--green-mid);
+    }
+    .monitor-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 18px; margin-bottom: 20px; }
+    .teacher-card {
+        display: grid;
+        grid-template-columns: 44px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(15,61,56,.08);
+    }
+    .teacher-card:last-child { border-bottom: 0; padding-bottom: 0; }
+    .teacher-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+        color: #fff;
+        font-weight: 800;
+    }
+    .teacher-card h4 { font-size: 13.5px; }
+    .teacher-card p { margin-top: 3px; font-size: 12px; color: var(--gray-600); }
+    .status-tag {
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+    .ok { background: #dcfce7; color: #15803d; }
+    .run { background: #dbeafe; color: #1d4ed8; }
+    .late { background: #fef3c7; color: #b45309; }
+    .miss { background: #ffe4e6; color: #be123c; }
+    .class-load {
+        display: grid;
+        gap: 12px;
+    }
+    .load-row {
+        display: grid;
+        grid-template-columns: 70px 1fr 42px;
+        gap: 10px;
+        align-items: center;
+        color: var(--gray-600);
+        font-size: 12.5px;
+    }
+    .bar {
+        height: 9px;
+        border-radius: 999px;
+        background: rgba(15,61,56,.08);
+        overflow: hidden;
+    }
+    .bar span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--green-mid), var(--green-light));
+    }
+    @media (max-width: 900px) {
+        .admin-monitor-hero,
+        .monitor-grid { grid-template-columns: 1fr; }
+    }

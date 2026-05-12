@@ -48,40 +48,40 @@
 </div>
 
 {{-- CHARTS ROW --}}
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;">
+<div class="chart-grid">
 
     {{-- Persentase Kehadiran Guru --}}
-    <div class="card" style="margin-bottom:0">
-        <div class="card-head" style="justify-content:space-between;">
+    <div class="card mb-none">
+        <div class="card-head card-head-between">
             <div>
-                <h3 style="color:var(--green-mid);">● Persentase Kehadiran Guru</h3>
-                <div style="font-size:11.5px;color:var(--gray-400);margin-top:2px;">Tren 7 hari terakhir</div>
+                <h3 class="back-link">● Persentase Kehadiran Guru</h3>
+                <div class="tiny-muted">Tren 7 hari terakhir</div>
             </div>
-            <div style="font-size:11.5px;color:var(--gray-400);">Jam fiktif (contoh data)</div>
+            <div class="tiny-muted">Jam fiktif (contoh data)</div>
         </div>
-        <div class="card-body" style="padding-bottom:14px;">
+        <div class="card-body" class="chart-body">
             <canvas id="chartGuru" height="140"></canvas>
-            <div class="legend" style="margin-top:12px;">
-                <div class="legend-item"><div class="legend-dot" style="background:#22a85d;"></div> Persentase Kehadiran</div>
+            <div class="legend legend-spaced">
+                <div class="legend-item"><div class="legend-dot" class="legend-good"></div> Persentase Kehadiran</div>
             </div>
         </div>
     </div>
 
     {{-- Kehadiran Siswa Per Kelas --}}
-    <div class="card" style="margin-bottom:0">
-        <div class="card-head" style="justify-content:space-between;">
+    <div class="card mb-none">
+        <div class="card-head card-head-between">
             <div>
-                <h3 style="color:#dc2626;">● Kehadiran Siswa Per Kelas</h3>
-                <div style="font-size:11.5px;color:var(--gray-400);margin-top:2px;">Data hari ini</div>
+                <h3 class="danger-title">● Kehadiran Siswa Per Kelas</h3>
+                <div class="tiny-muted">Data hari ini</div>
             </div>
-            <div style="font-size:11.5px;color:var(--gray-400);">Scroll →</div>
+            <div class="tiny-muted">Scroll →</div>
         </div>
-        <div class="card-body" style="padding-bottom:14px;overflow-x:auto;">
-            <canvas id="chartSiswa" height="140" style="min-width:420px;"></canvas>
-            <div class="legend" style="margin-top:12px;flex-wrap:wrap;gap:10px;">
-                <div class="legend-item"><div class="legend-dot" style="background:#22a85d;border-radius:50%;"></div> Baik (≥85%)</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;border-radius:50%;"></div> Sedang (70–79%)</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#ef4444;border-radius:50%;"></div> Rendah (&lt;70%)</div>
+        <div class="card-body" class="chart-scroll">
+            <canvas id="chartSiswa" height="140" class="chart-min"></canvas>
+            <div class="legend legend-wrap">
+                <div class="legend-item"><div class="legend-dot" class="legend-good"></div> Baik (≥85%)</div>
+                <div class="legend-item"><div class="legend-dot" class="legend-mid"></div> Sedang (70–79%)</div>
+                <div class="legend-item"><div class="legend-dot" class="legend-bad"></div> Rendah (&lt;70%)</div>
             </div>
         </div>
     </div>
@@ -89,12 +89,12 @@
 
 {{-- REKAPITULASI KEHADIRAN --}}
 <div class="card">
-    <div class="card-head" style="background:linear-gradient(135deg,#7c3aed,#9333ea);border-radius:0;justify-content:space-between;">
+    <div class="card-head rekap-head">
         <div>
-            <h3 style="color:#fff;">📊 Rekapitulasi Kehadiran Siswa Hari Ini</h3>
-            <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;">Data real-time dengan deduplikasi · 1 siswa per nama · Hadir per kelas</div>
+            <h3 class="text-white">📊 Rekapitulasi Kehadiran Siswa Hari Ini</h3>
+            <div class="white-muted">Data real-time dengan deduplikasi · 1 siswa per nama · Hadir per kelas</div>
         </div>
-        <span class="pill live" style="background:rgba(255,255,255,0.15);color:#fff;font-size:11px;">Live Data</span>
+        <span class="pill live live-pill-inverse">Live Data</span>
     </div>
     <div class="empty-state">
         <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -105,22 +105,22 @@
 
 {{-- MATRIX KEHADIRAN GURU REAL-TIME --}}
 <div class="card">
-    <div class="card-head" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div class="card-head card-head-wrap">
         <div>
             <h3>🗓 Matrix Kehadiran Guru Real-Time</h3>
-            <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">Status kehadiran guru per jam per kelas</div>
+            <div class="muted-note">Status kehadiran guru per jam per kelas</div>
         </div>
-        <div style="display:flex;gap:14px;align-items:center;font-size:12px;color:var(--gray-600);">
-            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--green-pale);border:1px solid var(--green-mid);display:inline-block;"></span>Ada Guru</span>
-            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:#fee2e2;border:1px solid #fca5a5;display:inline-block;"></span>Kelas Kosong</span>
-            <span style="font-size:11.5px;color:var(--green-mid);cursor:pointer;">Hover untuk detail →</span>
+        <div class="legend-row">
+            <span class="legend-chip"><span class="legend-box legend-h"></span>Ada Guru</span>
+            <span class="legend-chip"><span class="legend-box legend-a"></span>Kelas Kosong</span>
+            <span class="hover-note">Hover untuk detail →</span>
         </div>
     </div>
-    <div class="matrix-wrap" style="padding:16px;">
+    <div class="matrix-wrap matrix-padded">
         <table class="matrix">
             <thead>
                 <tr>
-                    <th style="min-width:80px;">Kelas</th>
+                    <th class="minw-class">Kelas</th>
                     @for($j=1;$j<=10;$j++)<th>Jam {{ $j }}</th>@endfor
                 </tr>
             </thead>
@@ -208,3 +208,4 @@ new Chart(document.getElementById('chartSiswa'), {
 });
 </script>
 @endpush
+

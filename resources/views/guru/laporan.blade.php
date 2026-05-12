@@ -4,7 +4,7 @@
 @section('content')
 
 {{-- HERO --}}
-<div class="hero" style="background:linear-gradient(135deg,#0f766e 0%,#0d9488 100%);margin-bottom:22px;">
+<div class="hero laporan-hero">
     <div class="hero-left">
         <div class="hero-icon">
             <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -14,7 +14,7 @@
     </div>
     <div class="hero-badge">
         <div class="hb-label">Data Tersedia</div>
-        <div class="hb-val" style="color:#4ade80;">● Real-time</div>
+        <div class="hb-val hb-ready">● Real-time</div>
     </div>
 </div>
 
@@ -43,43 +43,43 @@
     {{-- Filter --}}
     <div class="card">
         <div class="card-head">
-            <div class="step-num" style="background:var(--green-mid);">
+            <div class="step-num step-green">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             </div>
             <h3>Filter Data Jurnal</h3>
         </div>
         <div class="card-body">
-            <div class="filter-row">
-                <div class="form-group" style="margin:0">
+            <form class="filter-row" action="{{ route('guru.laporan') }}" method="GET">
+                <div class="form-group" class="field-reset">
                     <label>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         Guru Pengajar
                     </label>
-                    <select class="form-control">
-                        <option>Semua Guru</option>
-                        <option>Bu Rina Handayani</option>
-                        <option>Pak Dedi Kurniawan</option>
-                        <option>Bu Sari Wulandari</option>
+                    <select class="form-control" name="teacher_id">
+                        <option value="">Semua Guru</option>
+                        @foreach(($teachers ?? collect()) as $teacher)
+                        <option value="{{ $teacher->id }}" @selected(request('teacher_id') == $teacher->id)>{{ $teacher->name }}</option>
+                        @endforeach
                     </select>
                 </div>
-                <div class="form-group" style="margin:0">
+                <div class="form-group" class="field-reset">
                     <label>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                         Tanggal
                     </label>
-                    <input type="date" class="form-control" value="{{ date('Y-m-d') }}">
+                    <input type="date" name="date" class="form-control" value="{{ request('date', date('Y-m-d')) }}">
                 </div>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" type="submit">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                     Terapkan Filter
                 </button>
-            </div>
+            </form>
             <div class="export-row">
-                <button class="btn btn-outline" style="font-size:12.5px;padding:7px 14px;">
+                <a href="{{ route('guru.journals.export') }}" class="btn btn-outline btn-export">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     Excel
-                </button>
-                <button class="btn btn-outline" style="font-size:12.5px;padding:7px 14px;">
+                </a>
+                <button type="button" onclick="window.print()" class="btn btn-outline btn-export">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                     Print
                 </button>
@@ -89,12 +89,12 @@
 
     {{-- Tabel --}}
     <div class="card">
-        <div class="card-head" style="justify-content:space-between;">
+        <div class="card-head card-head-between">
             <h3>Data Jurnal Mengajar</h3>
-            <div style="display:flex;gap:12px;font-size:12px;color:var(--gray-400);align-items:center;">
-                <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--green-mid);display:inline-block;"></span> S = Sakit</span>
-                <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#2563eb;display:inline-block;"></span> I = Izin</span>
-                <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#dc2626;display:inline-block;"></span> A = Alfa</span>
+            <div class="legend-row tiny-muted">
+                <span class="legend-chip"><span class="legend-dot-small legend-good"></span> S = Sakit</span>
+                <span class="legend-chip"><span class="legend-dot-small legend-blue"></span> I = Izin</span>
+                <span class="legend-chip"><span class="legend-dot-small legend-bad"></span> A = Alfa</span>
             </div>
         </div>
         <table class="tbl">
@@ -107,13 +107,32 @@
                     <th>Mata Pelajaran</th>
                     <th>Materi</th>
                     <th>Metode</th>
-                    <th style="text-align:center">S</th>
-                    <th style="text-align:center">I</th>
-                    <th style="text-align:center">A</th>
-                    <th style="text-align:center">%</th>
+                    <th class="center-text">S</th>
+                    <th class="center-text">I</th>
+                    <th class="center-text">A</th>
+                    <th class="center-text">%</th>
                 </tr>
             </thead>
             <tbody>
+                @forelse(($journals ?? collect()) as $journal)
+                @php
+                    $total = max($journal->present_count + $journal->sick_count + $journal->permission_count + $journal->absent_count, 1);
+                    $percentage = round(($journal->present_count / $total) * 100);
+                @endphp
+                <tr>
+                    <td>{{ $journal->teacher?->name ?? '-' }}</td>
+                    <td>{{ optional($journal->date)->format('d/m/Y') }}</td>
+                    <td>{{ $journal->lesson_hour }}</td>
+                    <td>{{ $journal->schoolClass?->name ?? '-' }}</td>
+                    <td>{{ $journal->subject?->name ?? '-' }}</td>
+                    <td>{{ $journal->material ?? '-' }}</td>
+                    <td>{{ $journal->method ?? '-' }}</td>
+                    <td class="center-text">{{ $journal->sick_count }}</td>
+                    <td class="center-text">{{ $journal->permission_count }}</td>
+                    <td class="center-text">{{ $journal->absent_count }}</td>
+                    <td class="center-text">{{ $percentage }}%</td>
+                </tr>
+                @empty
                 <tr>
                     <td colspan="11">
                         <div class="tbl-empty">
@@ -122,13 +141,14 @@
                         </div>
                     </td>
                 </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
 </div>
 
 {{-- TAB: Per Kelas --}}
-<div id="tab-perkelas" style="display:none;">
+<div id="tab-perkelas" class="hidden">
     <div class="card">
         <div class="card-head"><h3>Rekap Kehadiran Per Kelas</h3></div>
         <div class="empty-state">
@@ -140,21 +160,21 @@
 </div>
 
 {{-- TAB: Individu --}}
-<div id="tab-individu" style="display:none;">
+<div id="tab-individu" class="hidden">
     <div class="card">
         <div class="card-head">
             <h3>Rekap Individu Siswa</h3>
         </div>
         <div class="card-body">
-            <div class="form-row cols-2" style="margin-bottom:0;">
-                <div class="form-group" style="margin:0">
+            <div class="form-row cols-2 mb-none">
+                <div class="form-group" class="field-reset">
                     <label>Pilih Kelas</label>
                     <select class="form-control">
                         <option>Pilih Kelas...</option>
                         <option>VII.1</option><option>VII.2</option><option>VIII.1</option>
                     </select>
                 </div>
-                <div class="form-group" style="margin:0">
+                <div class="form-group" class="field-reset">
                     <label>Rentang Tanggal</label>
                     <input type="date" class="form-control">
                 </div>
@@ -169,13 +189,13 @@
 </div>
 
 {{-- TAB: Analisis --}}
-<div id="tab-analisis" style="display:none;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
-        <div class="card" style="margin:0">
+<div id="tab-analisis" class="hidden">
+    <div class="analysis-grid">
+        <div class="card mb-none">
             <div class="card-head"><h3>Tren Kehadiran Bulanan</h3></div>
             <div class="card-body"><canvas id="chartTren" height="180"></canvas></div>
         </div>
-        <div class="card" style="margin:0">
+        <div class="card mb-none">
             <div class="card-head"><h3>Distribusi Metode Pembelajaran</h3></div>
             <div class="card-body"><canvas id="chartMetode" height="180"></canvas></div>
         </div>
@@ -234,3 +254,5 @@ function initChartAnalisis() {
 }
 </script>
 @endpush
+
+

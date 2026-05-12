@@ -4,7 +4,7 @@
 @section('content')
 
 {{-- HERO --}}
-<div class="hero" style="background: linear-gradient(135deg, #156b42 0%, #22a85d 100%);">
+<div class="hero guru-hero">
     <div class="hero-left">
         <div class="hero-icon">
             <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
@@ -14,18 +14,25 @@
     </div>
     <div class="hero-badge">
         <div class="hb-label">Status Sistem</div>
-        <div class="hb-val" style="color:#4ade80;">● Siap Digunakan</div>
+        <div class="hb-val hb-ready">● Siap Digunakan</div>
     </div>
 </div>
 
 {{-- FORM --}}
-<form action="#" method="POST" enctype="multipart/form-data" id="formJurnal">
+@if(session('success'))
+<div class="card card-success">{{ session('success') }}</div>
+@endif
+@if($errors->any())
+<div class="card card-error">{{ $errors->first() }}</div>
+@endif
+
+<form action="{{ route('guru.journals.store') }}" method="POST" enctype="multipart/form-data" id="formJurnal">
 @csrf
 
 {{-- STEP 1: Informasi Dasar --}}
 <div class="card">
     <div class="card-head">
-        <div class="step-num" style="background:var(--green-mid);">1</div>
+        <div class="step-num step-green">1</div>
         <h3>Informasi Dasar</h3>
     </div>
     <div class="card-body">
@@ -35,14 +42,14 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     Tanggal
                 </label>
-                <input type="date" class="form-control" name="tanggal" id="tgl" value="{{ date('Y-m-d') }}">
+                <input type="date" class="form-control" name="tanggal" id="tgl" value="{{ old('tanggal', date('Y-m-d')) }}">
             </div>
             <div class="form-group">
                 <label>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     Hari
                 </label>
-                <input type="text" class="form-control" id="hari" readonly style="background:#f0f0eb; color:var(--gray-600);">
+                <input type="text" class="form-control readonly-soft" id="hari" readonly>
             </div>
         </div>
     </div>
@@ -51,26 +58,26 @@
 {{-- STEP 2: Jam Pelajaran --}}
 <div class="card">
     <div class="card-head">
-        <div class="step-num" style="background:#7c3aed;">2</div>
+        <div class="step-num step-purple">2</div>
         <h3>Jam Pelajaran</h3>
     </div>
     <div class="card-body">
         <div class="jam-grid">
             @for($i = 1; $i <= 10; $i++)
-            <div class="jam-btn" onclick="selectJam(this, {{ $i }})" data-jam="{{ $i }}">
+            <div class="jam-btn {{ old('jam_pelajaran') == $i ? 'selected' : '' }}" onclick="selectJam(this, {{ $i }})" data-jam="{{ $i }}">
                 <div class="num">{{ $i }}</div>
                 <div class="lbl">Jam {{ $i }}</div>
             </div>
             @endfor
         </div>
-        <input type="hidden" name="jam_pelajaran" id="inputJam">
+        <input type="hidden" name="jam_pelajaran" id="inputJam" value="{{ old('jam_pelajaran') }}">
     </div>
 </div>
 
 {{-- STEP 3: Detail Pembelajaran --}}
 <div class="card">
     <div class="card-head">
-        <div class="step-num" style="background:#0369a1;">3</div>
+        <div class="step-num step-blue">3</div>
         <h3>Detail Pembelajaran</h3>
     </div>
     <div class="card-body">
@@ -82,11 +89,9 @@
                 </label>
                 <select class="form-control" name="guru">
                     <option value="">Pilih Guru</option>
-                    <option>Bu Rina Handayani</option>
-                    <option>Pak Dedi Kurniawan</option>
-                    <option>Bu Sari Wulandari</option>
-                    <option>Pak Andi Saputra</option>
-                    <option>Bu Lena Marliana</option>
+                    @foreach(['Bu Rina Handayani','Pak Dedi Kurniawan','Bu Sari Wulandari','Pak Andi Saputra','Bu Lena Marliana'] as $guru)
+                    <option @selected(old('guru') === $guru)>{{ $guru }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="form-group">
@@ -96,9 +101,9 @@
                 </label>
                 <select class="form-control" name="kelas" id="selectKelas" onchange="loadSiswa(this.value)">
                     <option value="">Pilih Kelas</option>
-                    <option>VII.1</option><option>VII.2</option><option>VII.3</option>
-                    <option>VIII.1</option><option>VIII.2</option><option>VIII.3</option>
-                    <option>IX.1</option><option>IX.2</option><option>IX.3</option>
+                    @foreach(['VII.1','VII.2','VII.3','VIII.1','VIII.2','VIII.3','IX.1','IX.2','IX.3'] as $kelas)
+                    <option @selected(old('kelas') === $kelas)>{{ $kelas }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="form-group">
@@ -108,10 +113,9 @@
                 </label>
                 <select class="form-control" name="mapel">
                     <option value="">Pilih Mata Pelajaran</option>
-                    <option>Matematika</option><option>Bahasa Indonesia</option>
-                    <option>Bahasa Inggris</option><option>IPA</option><option>IPS</option>
-                    <option>PAI</option><option>PKn</option><option>Seni Budaya</option>
-                    <option>Penjaskes</option><option>Prakarya</option>
+                    @foreach(['Matematika','Bahasa Indonesia','Bahasa Inggris','IPA','IPS','PAI','PKn','Seni Budaya','Penjaskes','Prakarya'] as $mapel)
+                    <option @selected(old('mapel') === $mapel)>{{ $mapel }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -121,7 +125,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                     Materi Pembelajaran
                 </label>
-                <textarea class="form-control" name="materi" placeholder="Tuliskan materi yang diajarkan hari ini..."></textarea>
+                <textarea class="form-control" name="materi" placeholder="Tuliskan materi yang diajarkan hari ini...">{{ old('materi') }}</textarea>
             </div>
             <div class="form-group">
                 <label>
@@ -130,10 +134,9 @@
                 </label>
                 <select class="form-control" name="metode">
                     <option value="">Pilih Metode</option>
-                    <option>Ceramah</option><option>Diskusi</option>
-                    <option>Presentasi</option><option>Praktik Langsung</option>
-                    <option>Project Based Learning</option><option>Problem Based Learning</option>
-                    <option>Cooperative Learning</option>
+                    @foreach(['Ceramah','Diskusi','Presentasi','Praktik Langsung','Project Based Learning','Problem Based Learning','Cooperative Learning'] as $metode)
+                    <option @selected(old('metode') === $metode)>{{ $metode }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -143,7 +146,7 @@
 {{-- STEP 4: Dokumentasi Foto --}}
 <div class="card">
     <div class="card-head">
-        <div class="step-num" style="background:#d97706;">4</div>
+        <div class="step-num step-orange">4</div>
         <h3>Dokumentasi Foto</h3>
     </div>
     <div class="card-body">
@@ -160,27 +163,27 @@
 </div>
 
 {{-- STEP 5: Absen Siswa --}}
-<div class="card" id="cardAbsen" style="display:none;">
+<div class="card hidden" id="cardAbsen">
     <div class="card-head">
-        <div class="step-num" style="background:#dc2626;">5</div>
-        <h3>Absensi Siswa <span id="labelKelas" style="font-weight:400;color:var(--gray-400);font-size:13px;"></span></h3>
-        <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
-            <button type="button" class="btn btn-outline" style="padding:6px 12px;font-size:12px;" onclick="setAllAbsen('H')">✓ Hadir Semua</button>
+        <div class="step-num step-red">5</div>
+        <h3>Absensi Siswa <span id="labelKelas" class="label-muted"></span></h3>
+        <div class="toolbar-inline">
+            <button type="button" class="btn btn-outline btn-compact" onclick="setAllAbsen('H')">✓ Hadir Semua</button>
         </div>
     </div>
     <div class="absen-header">
         <div>No</div><div>Nama Siswa</div>
-        <div style="text-align:center">H</div>
-        <div style="text-align:center">S</div>
-        <div style="text-align:center">I</div>
-        <div style="text-align:center">A</div>
+        <div class="center-text">H</div>
+        <div class="center-text">S</div>
+        <div class="center-text">I</div>
+        <div class="center-text">A</div>
     </div>
     <div id="absenList"></div>
-    <div style="padding:12px 16px;background:#f7f8f7;border-top:1px solid var(--gray-100);display:flex;gap:16px;font-size:12px;color:var(--gray-600);">
-        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#dcfce7;display:inline-block;border:1px solid #16a34a;"></span> H = Hadir</span>
-        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#fef9c3;display:inline-block;border:1px solid #ca8a04;"></span> S = Sakit</span>
-        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#dbeafe;display:inline-block;border:1px solid #2563eb;"></span> I = Izin</span>
-        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#fee2e2;display:inline-block;border:1px solid #dc2626;"></span> A = Alfa</span>
+    <div class="legend-strip">
+        <span class="legend-chip"><span class="legend-box legend-h"></span> H = Hadir</span>
+        <span class="legend-chip"><span class="legend-box legend-s"></span> S = Sakit</span>
+        <span class="legend-chip"><span class="legend-box legend-i"></span> I = Izin</span>
+        <span class="legend-chip"><span class="legend-box legend-a"></span> A = Alfa</span>
     </div>
 </div>
 
