@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+
+  projectbk-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: projectbk-app-image
+    container_name: projectbk-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - projectbk-network
+
+  projectbk-db:
+    image: mysql:8.0
+    container_name: projectbk-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: projectbk
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./docker-compose/mysql:/var/lib/mysql
+    networks:
+      - projectbk-network
+
+  projectbk-nginx:
+    image: nginx:alpine
+    container_name: projectbk-nginx
+    restart: unless-stopped
+    ports:
+      - "8006:80" # Berjalan di port 8006 sesuai permintaan
+    volumes:
+      - .:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    depends_on:
+      - projectbk-app
+    networks:
+      - projectbk-network
+
+networks:
+  projectbk-network:
+    driver: bridge
