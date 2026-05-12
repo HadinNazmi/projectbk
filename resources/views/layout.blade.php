@@ -29,6 +29,15 @@
         </div>
     </div>
     <div class="topbar-divider"></div>
+    
+    <!-- Mobile menu toggle button -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+        <svg viewBox="0 0 24 24">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
     <div class="topbar-nav">
         @if($isSuperAdmin)
         <a href="{{ route('super-admin.dashboard') }}" class="nav-link {{ request()->routeIs('super-admin.dashboard') ? 'active' : '' }}">
@@ -103,6 +112,61 @@
             d.toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
     }
     tick(); setInterval(tick, 1000);
+    
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const topbarNav = document.querySelector('.topbar-nav');
+        
+        if (mobileMenuToggle && topbarNav) {
+            mobileMenuToggle.addEventListener('click', function() {
+                topbarNav.classList.toggle('mobile-active');
+                
+                // Toggle hamburger icon
+                const svg = mobileMenuToggle.querySelector('svg');
+                if (topbarNav.classList.contains('mobile-active')) {
+                    // Change to X icon
+                    svg.innerHTML = `
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    `;
+                } else {
+                    // Change back to hamburger icon
+                    svg.innerHTML = `
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    `;
+                }
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!mobileMenuToggle.contains(event.target) && !topbarNav.contains(event.target)) {
+                    topbarNav.classList.remove('mobile-active');
+                    const svg = mobileMenuToggle.querySelector('svg');
+                    svg.innerHTML = `
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    `;
+                }
+            });
+            
+            // Close menu when window is resized to desktop size
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    topbarNav.classList.remove('mobile-active');
+                    const svg = mobileMenuToggle.querySelector('svg');
+                    svg.innerHTML = `
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    `;
+                }
+            });
+        }
+    });
 </script>
 @stack('scripts')
 </body>

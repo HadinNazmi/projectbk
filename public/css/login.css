@@ -286,9 +286,14 @@
             transition: opacity 0.2s;
         }
 
-        .btn-login:hover { opacity: 0.92; }
-        .btn-login:hover::after { opacity: 1; }
-        .btn-login:active { transform: scale(0.99); }
+        .btn-login:hover { 
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            opacity: 1;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(220,38,38,0.3);
+        }
+        .btn-login:hover::after { opacity: 0; }
+        .btn-login:active { transform: scale(0.98); }
 
         /* Error */
         .alert-error {
@@ -407,8 +412,15 @@
             background: #f3f7f4;
             color: #07100c;
             box-shadow: 0 0 24px rgba(255,255,255,.22);
+            transition: all 0.2s;
         }
         .btn-login::after { display: none; }
+        .btn-login:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(220,38,38,0.4);
+        }
         .card-footer {
             border-top-color: rgba(255,255,255,.09);
             color: rgba(255,255,255,.48);
@@ -490,6 +502,12 @@
             background: linear-gradient(135deg, var(--green-mid), var(--green-light));
             color: #fff;
             box-shadow: 0 16px 32px rgba(22,121,111,.24);
+            transition: all 0.2s;
+        }
+        .btn-login:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(220,38,38,0.3);
         }
         .card-footer {
             border-top-color: rgba(15,61,56,.09);
